@@ -9,3 +9,20 @@ canvas {
     height: 100%;
     margin: 0;
 }
+
+body {
+	background-image: url(./map.png);
+}
+body, canvas {
+	background-size: auto;
+	background-repeat: no-repeat;
+	background-position: bottom right;
+}
+
+canvas {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	width: 299px;
+	height: 299px;
+}
