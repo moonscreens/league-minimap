@@ -70,7 +70,7 @@ function draw() {
 		ctx.drawImage(emote.gif.canvas, position.x - emoteSize/2, position.y - emoteSize/2, emoteSize, emoteSize);
 
 		sightCtx.beginPath();
-		sightCtx.arc(position.x, position.y, emoteSize, 0, 2 * Math.PI, false);
+		sightCtx.arc(position.x, position.y, emoteSize * 0.75, 0, 2 * Math.PI, false);
 		sightCtx.fill();
 
 		// Delete a group after 10 seconds
@@ -146,7 +146,7 @@ ChatInstance.on("emotes", (emotes) => {
 		emotes,
 		lane: Math.floor(Math.random() * lanes.length),
 		spawn: Date.now(),
-		duration: 10000,
+		duration: 15000,
 	});
 })
 
