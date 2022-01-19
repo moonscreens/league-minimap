@@ -12,7 +12,7 @@ canvas {
 }
 
 body {
-	background-image: url(./map.png);
+	
 }
 body, canvas {
 	background-size: auto;
@@ -26,4 +26,10 @@ canvas {
 	right: 0;
 	width: 299px;
 	height: 299px;
+	transform-origin: bottom right;
+}
+
+canvas:last-child {
+	background-image: url(./map.png);
+	background-size: cover;
 }

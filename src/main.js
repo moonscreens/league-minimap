@@ -24,6 +24,11 @@ document.body.appendChild(canvas);
 canvas.style.zIndex = "100";
 const ctx = canvas.getContext('2d');
 
+const mapImage = new Image();
+import mapPNG from './map.png';
+mapImage.src = mapPNG;
+
+
 
 
 const sightCanvas = document.createElement('canvas');
@@ -32,6 +37,10 @@ document.body.appendChild(sightCanvas);
 const sightOverlay = new Image();
 import invisiblePNG from './invisible.png';
 sightOverlay.src = invisiblePNG;
+
+const gScale = 1.24;
+sightCanvas.style.transform = "scale(" + gScale + ")";
+canvas.style.transform = "scale(" + gScale + ")";
 
 
 function resize() {
@@ -81,7 +90,7 @@ function draw() {
 	}
 
 	sightCtx.globalCompositeOperation = 'source-out';
-	sightCtx.drawImage(sightOverlay, 0, 0);
+	sightCtx.drawImage(sightOverlay, 0, 0, sightCanvas.width, sightCanvas.height);
 
 	lastFrame = Date.now();
 }
@@ -106,6 +115,7 @@ const lanes = [
 		{ x: 258, y: 50 },
 	]
 ]
+
 
 
 function getLaneDirection(emote) {
