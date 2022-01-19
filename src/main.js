@@ -59,29 +59,30 @@ function draw() {
 
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-	for (let o = emoteArray.length - 1; o >= 0; o--) {
-		const emoteGroup = emoteArray[o];
+	for (let i = emoteArray.length - 1; i >= 0; i--) {
+		const emoteGroup = emoteArray[i];
 
-		const position = getLanePosition(emoteGroup.lane, ((Date.now() - emoteGroup.spawn) / emoteGroup.duration) * 3);
+		const direction = getLaneDirection(emoteGroup); // figure out which direction we're headed
 
-		// Keep track of where we should be drawing the next emote per message
-
-		const emote = emoteGroup.emotes[0];
-		ctx.drawImage(emote.gif.canvas, position.x - emoteSize/2, position.y - emoteSize/2, emoteSize, emoteSize);
-
-		sightCtx.beginPath();
-		sightCtx.arc(position.x, position.y, emoteSize * 0.75, 0, 2 * Math.PI, false);
-		sightCtx.fill();
-
-		// Delete a group after 10 seconds
-		if (emoteGroup.spawn < Date.now() - emoteGroup.duration) {
-			emoteArray.splice(o, 1);
+		if (!direction) {
+			emoteArray.splice(i, 1);
+		} else {
+			emoteGroup.x += direction.x * emoteGroup.speed * delta;
+			emoteGroup.y += direction.y * emoteGroup.speed * delta;
+	
+			const emote = emoteGroup.emotes[0];
+			ctx.drawImage(emote.gif.canvas, emoteGroup.x - emoteSize / 2, emoteGroup.y - emoteSize / 2, emoteSize, emoteSize);
+	
+			sightCtx.beginPath();
+			sightCtx.arc(emoteGroup.x, emoteGroup.y, emoteSize * 0.75, 0, 2 * Math.PI, false);
+			sightCtx.fill();
 		}
+		
 	}
 
 	sightCtx.globalCompositeOperation = 'source-out';
 	sightCtx.drawImage(sightOverlay, 0, 0);
-	
+
 	lastFrame = Date.now();
 }
 
@@ -106,48 +107,56 @@ const lanes = [
 	]
 ]
 
-// compute step distances for each lane
-for (let laneIndex = 0; laneIndex < lanes.length; laneIndex++) {
-	const lane = lanes[laneIndex];
-	for (let i = 0; i < lane.length - 1; i++) {
-		const start = lane[i];
-		const end = lane[i + 1];
-		const distance = Math.sqrt(Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2));
-		lane[i].distance = distance;
+
+function getLaneDirection(emote) {
+	// takes an emote, returns the direction it's headed, null if it's not headed anywhere
+	// returns direction as { x, y }
+
+
+	// if the emote is close enough to the next point, increment currentPoint
+	if (emote.x > emote.points[emote.currentPoint].x - 1 && emote.x < emote.points[emote.currentPoint].x + 1) {
+		emote.currentPoint++;
+	}
+
+	// if we've reached the end of the path, return null
+	if (emote.currentPoint >= emote.points.length) {
+		return null;
+	}
+
+	// otherwise, return the normalized direction we're headed
+	const direction = {
+		x: emote.points[emote.currentPoint].x - emote.x,
+		y: emote.points[emote.currentPoint].y - emote.y,
+	}
+	return normalize(direction);
+}
+
+function normalize (vector2) { //takes {x, y}, normalizes it, and returns it
+	const length = Math.sqrt(vector2.x * vector2.x + vector2.y * vector2.y);
+	return {
+		x: vector2.x / length,
+		y: vector2.y / length,
 	}
 }
 
-const getLanePosition = (laneIndex, progress = 1) => { //returns x,y of the point on the lane the emote is at
-	const lane = lanes[laneIndex];
-	let x = 0;
-	let y = 0;
-	for (let i = 0; i < lane.length - 1; i++) {
-		const start = lane[i];
-		const end = lane[i + 1];
-		const distance = Math.sqrt(Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2));
-		const step = distance / start.distance;
-		if (progress > step) {
-			x = end.x;
-			y = end.y;
-			progress -= step;
-		} else {
-			x = start.x + progress * (end.x - start.x);
-			y = start.y + progress * (end.y - start.y);
-			break;
-		}
-	}
-	return { x, y };
-}
+
+
+
 
 // add a callback function for when a new message with emotes is sent
 const emoteArray = [];
 ChatInstance.on("emotes", (emotes) => {
-	emoteArray.push({
+	const emote = {
 		emotes,
 		lane: Math.floor(Math.random() * lanes.length),
 		spawn: Date.now(),
-		duration: 15000,
-	});
+		speed: 20, // moves at 1 unit a second along the given path
+		currentPoint: 1, // which point in the path we're at
+	}
+	emote.x = lanes[emote.lane][0].x;
+	emote.y = lanes[emote.lane][0].y;
+	emote.points = lanes[emote.lane];
+	emoteArray.push(emote);
 })
 
 draw();
