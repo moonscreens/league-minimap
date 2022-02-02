@@ -78,19 +78,19 @@ function draw() {
 		} else {
 			emoteGroup.x += direction.x * emoteGroup.speed * delta;
 			emoteGroup.y += direction.y * emoteGroup.speed * delta;
-	
+
 			const emote = emoteGroup.emotes[0];
 			ctx.save();
 			ctx.translate(emoteGroup.x, emoteGroup.y);
 			ctx.rotate(Math.atan2(direction.y, direction.x));
 			ctx.drawImage(emote.gif.canvas, -emoteSize / 2, -emoteSize / 2, emoteSize, emoteSize);
 			ctx.restore();
-	
+
 			sightCtx.beginPath();
 			sightCtx.arc(emoteGroup.x, emoteGroup.y, emoteSize * 0.75, 0, 2 * Math.PI, false);
 			sightCtx.fill();
 		}
-		
+
 	}
 
 	sightCtx.globalCompositeOperation = 'source-out';
@@ -100,13 +100,14 @@ function draw() {
 }
 
 const lanes = [
-	[ // mid
+	[ // top
 		{ x: 56, y: 258 },
 		{ x: 50, y: 92 },
+		{ x: 67, y: 67 },
 		{ x: 94, y: 50 },
 		{ x: 258, y: 50 },
 	],
-	[ // top
+	[ // mid
 		{ x: 56, y: 258 },
 		{ x: 124, y: 190 },
 		{ x: 190, y: 124 },
@@ -115,6 +116,7 @@ const lanes = [
 	[ // bottom
 		{ x: 56, y: 258 },
 		{ x: 228, y: 263 },
+		{ x: 254, y: 249 },
 		{ x: 267, y: 221 },
 		{ x: 258, y: 50 },
 	]
@@ -145,7 +147,7 @@ function getLaneDirection(emote) {
 	return normalize(direction);
 }
 
-function normalize (vector2) { //takes {x, y}, normalizes it, and returns it
+function normalize(vector2) { //takes {x, y}, normalizes it, and returns it
 	const length = Math.sqrt(vector2.x * vector2.x + vector2.y * vector2.y);
 	return {
 		x: vector2.x / length,
