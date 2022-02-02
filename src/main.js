@@ -62,7 +62,8 @@ const box = {
 		x: 1,
 		y: 1,
 	},
-}
+};
+const outsideCornerDistance = 34;
 
 const emoteSize = 20;
 
@@ -109,17 +110,17 @@ function draw() {
 
 	box.x += box.velocity.x * delta * 30;
 	box.y += box.velocity.y * delta * 30;
-	if (box.x < 0) {
+	if (box.x < outsideCornerDistance) {
 		box.velocity.x = 1 + (Math.random() - 0.5) * 0.5;
-		box.x = 0;
+		box.x = outsideCornerDistance;
 	}
 	if (box.x > canvas.width - box.width) {
 		box.velocity.x = -1 + (Math.random() - 0.5) * 0.5;
 		box.x = canvas.width - box.width;
 	}
-	if (box.y < 0) {
+	if (box.y < outsideCornerDistance) {
 		box.velocity.y = 1 + (Math.random() - 0.5) * 0.5;
-		box.y = 0;
+		box.y = outsideCornerDistance;
 	}
 	if (box.y > canvas.height - box.height) {
 		box.velocity.y = -1 + (Math.random() - 0.5) * 0.5;
