@@ -80,7 +80,11 @@ function draw() {
 			emoteGroup.y += direction.y * emoteGroup.speed * delta;
 	
 			const emote = emoteGroup.emotes[0];
-			ctx.drawImage(emote.gif.canvas, emoteGroup.x - emoteSize / 2, emoteGroup.y - emoteSize / 2, emoteSize, emoteSize);
+			ctx.save();
+			ctx.translate(emoteGroup.x, emoteGroup.y);
+			ctx.rotate(Math.atan2(direction.y, direction.x));
+			ctx.drawImage(emote.gif.canvas, -emoteSize / 2, -emoteSize / 2, emoteSize, emoteSize);
+			ctx.restore();
 	
 			sightCtx.beginPath();
 			sightCtx.arc(emoteGroup.x, emoteGroup.y, emoteSize * 0.75, 0, 2 * Math.PI, false);
