@@ -53,6 +53,17 @@ function resize() {
 resize();
 window.addEventListener('resize', resize);
 
+const box = {
+	x: Math.random() * canvas.width,
+	y: Math.random() * canvas.height,
+	width: 70,
+	height: 40,
+	velocity: {
+		x: 1,
+		y: 1,
+	},
+}
+
 const emoteSize = 20;
 
 let lastFrame = Date.now();
@@ -95,6 +106,20 @@ function draw() {
 
 	sightCtx.globalCompositeOperation = 'source-out';
 	sightCtx.drawImage(sightOverlay, 0, 0, sightCanvas.width, sightCanvas.height);
+
+	box.x += box.velocity.x * delta * 30;
+	box.y += box.velocity.y * delta * 30;
+	if (box.x < 0 || box.x > canvas.width - box.width) {
+		box.velocity.x *= -1;
+		box.x = Math.max(0, Math.min(canvas.width - box.width, box.x));
+	}
+	if (box.y < 0 || box.y > canvas.height - box.height) {
+		box.velocity.y *= -1;
+		box.y = Math.max(0, Math.min(canvas.height - box.height, box.y));
+	}
+	ctx.strokeStyle = '#ffffff';
+	ctx.lineWidth = 2;
+	ctx.strokeRect(box.x, box.y, box.width, box.height);
 
 	lastFrame = Date.now();
 }
