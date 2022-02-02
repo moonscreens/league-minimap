@@ -140,16 +140,6 @@ const lanes = [
 		{ x: 94, y: 50 },
 		{ x: 258, y: 50 },
 	],
-	[ // top jungle
-		{ x: 56, y: 258 },
-		{ x: 50, y: 92 },
-		{ x: 67, y: 67 },
-		{ x: 87, y: 89 },
-		{ x: 100, y: 116 },
-		{ x: 130, y: 131 },
-		{ x: 158, y: 158 },
-		{ x: 258, y: 56 },
-	],
 	[ // mid
 		{ x: 56, y: 258 },
 		{ x: 124, y: 190 },
@@ -172,7 +162,18 @@ const lanes = [
 		{ x: 158, y: 158 },
 		{ x: 258, y: 56 },
 	],
-]
+	[ // top jungle
+		{ x: 56, y: 258 },
+		{ x: 50, y: 92 },
+		{ x: 67, y: 67 },
+		{ x: 87, y: 89 },
+		{ x: 100, y: 116 },
+		{ x: 130, y: 131 },
+		{ x: 158, y: 158 },
+		{ x: 258, y: 56 },
+	],
+];
+const specialLaneBreakpoint = 3;
 
 
 
@@ -216,7 +217,7 @@ const emoteArray = [];
 ChatInstance.on("emotes", (emotes) => {
 	const emote = {
 		emotes,
-		lane: Math.floor(Math.random() * lanes.length),
+		lane: Math.random() < 0.1 ? specialLaneBreakpoint + Math.floor(Math.random() * (lanes.length - specialLaneBreakpoint)) : Math.floor(Math.random() * specialLaneBreakpoint),
 		spawn: Date.now(),
 		speed: 20, // moves at 1 unit a second along the given path
 		currentPoint: 1, // which point in the path we're at
