@@ -73,7 +73,7 @@ function draw() {
 
 		const direction = getLaneDirection(emoteGroup); // figure out which direction we're headed
 
-		if (!direction) {
+		if (!direction || emoteGroup.spawn < Date.now() - 30000) {
 			emoteArray.splice(i, 1);
 		} else {
 			emoteGroup.x += direction.x * emoteGroup.speed * delta;
