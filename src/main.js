@@ -109,13 +109,21 @@ function draw() {
 
 	box.x += box.velocity.x * delta * 30;
 	box.y += box.velocity.y * delta * 30;
-	if (box.x < 0 || box.x > canvas.width - box.width) {
-		box.velocity.x *= -1;
-		box.x = Math.max(0, Math.min(canvas.width - box.width, box.x));
+	if (box.x < 0) {
+		box.velocity.x = 1 + (Math.random() - 0.5) * 0.5;
+		box.x = 0;
 	}
-	if (box.y < 0 || box.y > canvas.height - box.height) {
-		box.velocity.y *= -1;
-		box.y = Math.max(0, Math.min(canvas.height - box.height, box.y));
+	if (box.x > canvas.width - box.width) {
+		box.velocity.x = -1 + (Math.random() - 0.5) * 0.5;
+		box.x = canvas.width - box.width;
+	}
+	if (box.y < 0) {
+		box.velocity.y = 1 + (Math.random() - 0.5) * 0.5;
+		box.y = 0;
+	}
+	if (box.y > canvas.height - box.height) {
+		box.velocity.y = -1 + (Math.random() - 0.5) * 0.5;
+		box.y = canvas.height - box.height;
 	}
 	ctx.strokeStyle = '#ffffff';
 	ctx.lineWidth = 2;
