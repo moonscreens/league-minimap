@@ -63,7 +63,7 @@ const box = {
 		y: 1,
 	},
 };
-const outsideCornerDistance = 34;
+const outsideCornerDistance = 19;
 
 const emoteSize = 20;
 
